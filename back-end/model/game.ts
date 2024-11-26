@@ -4,6 +4,7 @@ export class Game {
     private time_limit: number;
     private max_players: number;
     private win_condition: number;
+    private players: number[] = [];
 
     constructor(game: {
         game_code: string,
@@ -17,6 +18,14 @@ export class Game {
         this.time_limit = game.time_limit;
         this.max_players = game.max_players;
         this.win_condition = game.win_condition;
+    }
+
+    addPlayer(playerId: number): void {
+        if (this.players.length < this.max_players) {
+            this.players.push(playerId);
+        } else {
+            throw new Error("Maximum number of players reached");
+        }
     }
 
     getGameCode() {

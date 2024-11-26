@@ -5,6 +5,7 @@ import * as bodyParser from 'body-parser';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import gameRouter from './controller/game.routes'; 
+import playerRouter from './controller/player.routes';
 
 const app = express();
 dotenv.config();
@@ -18,6 +19,7 @@ app.get('/status', (req, res) => {
 });
 
 app.use('/api/games', gameRouter); 
+app.use('/api/players', playerRouter);
 
 app.listen(port, () => {
     console.log(`Back-end is running on port ${port}.`);

@@ -1,6 +1,8 @@
 import { Game } from "../model/game";
+import { Player } from "../model/player";
 
 const games: Game[] = [];
+const players: Player[] = [];
 
 const getGamesById = ({ id }: { id: string }): Game | null => {
     try {
@@ -23,9 +25,26 @@ const getAllGames = (): Game[] => {
     return games;
 };
 
+const createGame = (game: Game): void => {
+    games.push(game);
+};
+
+const updateGame = (game: Game): void => {
+    const index = games.findIndex(g => g.getGameCode() === game.getGameCode());
+    games[index] = game;
+}
+
+const addPlayer = (player: Player): void => {
+    players.push(player);
+}
+
+
 export default {
     getGamesById,
     addGame,
     gameExists,
-    getAllGames
+    getAllGames,
+    createGame,
+    updateGame,
+    addPlayer
 };

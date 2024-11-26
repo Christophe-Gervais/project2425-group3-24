@@ -18,6 +18,28 @@ const getPlayersById =({ id }: { id: number }): Player | null => {
     }
 }
 
+const createPlayer = (player: Player): void => {
+    players.push(player);
+}
+
+const updatePlayer = (player: Player): void => {
+    const index = players.findIndex(p => p.getId() === player.getId());
+    players[index] = player;
+}
+
+const deletePlayer = (id: number): void => {
+    const index = players.findIndex(p => p.getId() === id);
+    players.splice(index, 1);
+}
+
+const getAllPlayers = (): Player[] => {
+    return players;
+}
+
 export default {
     getPlayersById,
+    createPlayer,
+    updatePlayer,
+    deletePlayer,
+    getAllPlayers
 }

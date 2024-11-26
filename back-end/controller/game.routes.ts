@@ -21,9 +21,25 @@ router.post("/create", (req: Request, res: Response) => {
     return res.status(201).json({ game: result });
 });
 
-router.get("/", (req: Request, res: Response) => {
+router.get("/getAllGames", (req: Request, res: Response) => {
     const games = gameRepository.getAllGames();
     return res.status(200).json({ games });
+});
+
+router.put("/join", (req: Request, res: Response) => {
+    const { game_id, player_id } = req.body;
+
+    if (game_id === undefined || player_id === undefined) {
+        return res.status(400).json({ error: "All fields are required" });
+    }
+
+    const result = gameService.joinGame(game_id, player_id);
+
+    if (result instanceof Error) {
+        return res.status(500).json({ error: result.message });
+    }
+
+    return res.status(200).json({ game: result });
 });
 
 export default router;
