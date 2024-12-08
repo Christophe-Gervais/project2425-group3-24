@@ -2,7 +2,6 @@ import { Game } from "../model/game";
 import { Player } from "../model/player";
 
 const games: Game[] = [];
-const players: Player[] = [];
 
 const getGamesById = ({ id }: { id: string }): Game | null => {
     try {
@@ -34,10 +33,6 @@ const updateGame = (game: Game): void => {
     games[index] = game;
 }
 
-const addPlayer = (player: Player): void => {
-    players.push(player);
-}
-
 
 export default {
     getGamesById,
@@ -45,6 +40,5 @@ export default {
     gameExists,
     getAllGames,
     createGame,
-    updateGame,
-    addPlayer
+    updateGame
 };

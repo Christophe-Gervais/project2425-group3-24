@@ -1,19 +1,15 @@
 export class Player {
+    private static currentId = 0;
     private id: number;
-    private username: string;
-    private score: number;
-    private is_host: boolean;
+    public username: string;
+    public score: number;
+    public is_host: boolean;
 
-    constructor(player: {
-        id: number
-        username: string,
-        score: number,
-        is_host: boolean
-    }) {
-        this.id = player.id;
+    constructor(player: { id?: number; username: string; score: number; is_host: boolean }) {
+        this.id = player.id ?? ++Player.currentId;
         this.username = player.username;
         this.score = player.score;
-        this.is_host = player.is_host
+        this.is_host = player.is_host;
     }
 
     getId() {

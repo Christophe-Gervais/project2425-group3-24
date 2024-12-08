@@ -6,14 +6,14 @@ export class PlayerService {
 
     createPlayer(username: string): Player | Error {
         const newPlayer = new Player({
-            id: 1,
             username: username,
             score: 0,
             is_host: false
         });
-        playerDb.createPlayer(newPlayer);
+        playerDb.createPlayer(newPlayer); 
         return newPlayer;
     }
+    
 
     getPlayerById(playerId: number): Player | Error {
         const player = playerDb.getPlayersById({ id: playerId });

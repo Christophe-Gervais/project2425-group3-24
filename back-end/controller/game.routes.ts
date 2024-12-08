@@ -8,7 +8,12 @@ const gameService = new GameService();
 router.post("/create", (req: Request, res: Response) => {
     const { card_deck_id, time_limit, max_players, win_condition } = req.body;
 
-    if (card_deck_id === undefined || time_limit === undefined || max_players === undefined || win_condition === undefined) {
+    if (
+        card_deck_id === undefined ||
+        time_limit === undefined ||
+        max_players === undefined ||
+        win_condition === undefined
+    ) {
         return res.status(400).json({ error: "All fields are required" });
     }
 
@@ -22,8 +27,12 @@ router.post("/create", (req: Request, res: Response) => {
 });
 
 router.get("/getAllGames", (req: Request, res: Response) => {
-    const games = gameRepository.getAllGames();
-    return res.status(200).json({ games });
+    try {
+        const games = gameRepository.getAllGames();
+        return res.status(200).json({ games });
+    } catch (error) {
+        return res.status(500).json({ error: "Failed to retrieve games" });
+    }
 });
 
 router.put("/join", (req: Request, res: Response) => {

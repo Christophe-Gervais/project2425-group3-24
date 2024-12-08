@@ -1,13 +1,6 @@
 import { Player } from "../model/player";
 
-const players = [
-    new Player({
-        id: 1,
-        username: "player1",
-        score: 0,
-        is_host: true
-    }),
-]
+const players: Player[] = [];
 
 const getPlayersById =({ id }: { id: number }): Player | null => {
     try {
@@ -18,9 +11,12 @@ const getPlayersById =({ id }: { id: number }): Player | null => {
     }
 }
 
-const createPlayer = (player: Player): void => {
-    players.push(player);
-}
+const createPlayer = (player: { username: string; score: number; is_host: boolean }): Player => {
+    const newPlayer = new Player(player);
+    players.push(newPlayer);
+    return newPlayer;
+};
+
 
 const updatePlayer = (player: Player): void => {
     const index = players.findIndex(p => p.getId() === player.getId());
