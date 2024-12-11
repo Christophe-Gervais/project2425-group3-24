@@ -1,41 +1,71 @@
 import { Player } from "../model/player";
+import database from './database';
 
-const players: Player[] = [];
-
-const getPlayersById =({ id }: { id: number }): Player | null => {
+const createPlayer = async (player: Player): Promise<Player> => {
     try {
-        return players.find((player) => player.getId() === id) || null;
+        const playerPrisma = await database.player.create({
+            data: {
+                id: player.getId()!,
+                gameCode: player.getGameCode(),
+                username: player.getUsername(),
+                score: player.getScore()
+            },
+            include: {
+                rounds: true,
+                cardCzarRounds: true,
+                winningRounds: true
+            }
+        });
+        return Player.from(playerPrisma);
     } catch (error) {
         console.error(error);
-        throw new Error("An error occurred while getting a player by id");
+        throw new Error('Database error. See server log for details.');
     }
-}
-
-const createPlayer = (player: { username: string; score: number; is_host: boolean }): Player => {
-    const newPlayer = new Player(player);
-    players.push(newPlayer);
-    return newPlayer;
 };
 
+const updatePlayer = async (player: Player): Promise<Player | null> => {
+    try {
+        const playerPrisma = await database.player.update({
+            where: { id: player.getId() },
+            data: {
+                id: player.getId(),
+                gameCode: player.getGameCode(),
+                username: player.getUsername(),
+                score: player.getScore()
+            },
+            include: {
+                rounds: true,
+                cardCzarRounds: true,
+                winningRounds: true
+            }
+        });
+        return playerPrisma ? Player.from(playerPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
 
-const updatePlayer = (player: Player): void => {
-    const index = players.findIndex(p => p.getId() === player.getId());
-    players[index] = player;
-}
+const getPlayerById = async ({ id }: { id: number }): Promise<Player | null> => {
+    try {
+        const playerPrisma = await database.player.findUnique({
+            where: { id },
+            include: {
+                rounds: true,
+                cardCzarRounds: true,
+                winningRounds: true
+            }
+        });
 
-const deletePlayer = (id: number): void => {
-    const index = players.findIndex(p => p.getId() === id);
-    players.splice(index, 1);
-}
-
-const getAllPlayers = (): Player[] => {
-    return players;
-}
+        return playerPrisma ? Player.from(playerPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
 
 export default {
-    getPlayersById,
     createPlayer,
     updatePlayer,
-    deletePlayer,
-    getAllPlayers
+    getPlayerById
 }

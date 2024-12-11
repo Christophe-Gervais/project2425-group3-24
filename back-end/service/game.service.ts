@@ -5,15 +5,6 @@ import gameDb from '../repository/game.db';
 export class GameService {
     private readonly maxAttempts = 10;
 
-    private generateCode(): string {
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        let code = "";
-        for (let i = 0; i < 4; i++) {
-            code += letters.charAt(Math.floor(Math.random() * letters.length));
-        }
-        return code;
-    }
-
     createGame(cardDeckId: number, timeLimit: number, maxPlayers: number, winCondition: number): Game | Error {
         let attempts = 0;
 

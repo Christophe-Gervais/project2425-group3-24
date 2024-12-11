@@ -1,44 +1,83 @@
-import { Game } from "../model/game";
-import { Player } from "../model/player";
+import { Game } from '../model/game';
+import database from './database';
 
-const games: Game[] = [];
-
-const getGamesById = ({ id }: { id: string }): Game | null => {
+const createGame = async (game: Game): Promise<Game> => {
     try {
-        return games.find((game) => game.getGameCode() === id) || null;
+        const gamePrisma = await database.game.create({
+            data: {
+                gameCode: game.getGameCode(),
+                hostPlayerId: game.getHostPlayerId(),
+                cardDeckId: game.getCardDeck().getId()!,
+                timeLimit: game.getTimeLimit(),
+                maxPlayers: game.getMaxPlayers(),
+                winCondition: game.getWinCondition()
+            },
+            include: {
+                cardDeck: {
+                    include: { cards: true }
+                },
+                players: true,
+                rounds: true
+            }
+        });
+        return Game.from(gamePrisma);
     } catch (error) {
         console.error(error);
-        throw new Error("An error occurred while getting a game by id");
+        throw new Error('Database error. See server log for details.');
     }
 };
 
-const addGame = (game: Game): void => {
-    games.push(game);
+const updateGame = async (game: Game): Promise<Game | null> => {
+    try {
+        const gamePrisma = await database.game.update({
+            where: { gameCode: game.getGameCode() },
+            data: {
+                gameCode: game.getGameCode(),
+                hostPlayerId: game.getHostPlayerId(),
+                cardDeckId: game.getCardDeck().getId()!,
+                timeLimit: game.getTimeLimit(),
+                maxPlayers: game.getMaxPlayers(),
+                winCondition: game.getWinCondition()
+            },
+            include: {
+                cardDeck: {
+                    include: { cards: true }
+                },
+                players: true,
+                rounds: true
+            }
+        });
+        return gamePrisma ? Game.from(gamePrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
 };
 
-const gameExists = (code: string): boolean => {
-    return games.some(game => game.getGameCode() === code);
+const getGameByGameCode = async (gameCode: string): Promise<Game | null> => {
+    try {
+        const gamePrisma = await database.game.findUnique({
+            where: { gameCode },
+            include: {
+                cardDeck: {
+                    include: {
+                        cards: true
+                    }
+                },
+                players: true,
+                rounds: true
+            } 
+        });
+
+        return gamePrisma ? Game.from(gamePrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
 };
-
-const getAllGames = (): Game[] => {
-    return games;
-};
-
-const createGame = (game: Game): void => {
-    games.push(game);
-};
-
-const updateGame = (game: Game): void => {
-    const index = games.findIndex(g => g.getGameCode() === game.getGameCode());
-    games[index] = game;
-}
-
 
 export default {
-    getGamesById,
-    addGame,
-    gameExists,
-    getAllGames,
     createGame,
-    updateGame
+    updateGame,
+    getGameByGameCode
 };

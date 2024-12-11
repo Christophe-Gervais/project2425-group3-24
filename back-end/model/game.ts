@@ -1,50 +1,116 @@
+import { 
+    Game as GamePrisma,
+    Player as PlayerPrisma,
+    Round as RoundPrisma,
+    CardDeck as CardDeckPrisma,
+    CardInDeck as CardInDeckPrisma
+} from '@prisma/client';
+import { CardDeck } from './cardDeck';
+
 export class Game {
-    private game_code: string;
-    private card_deck_id: number;
-    private time_limit: number;
-    private max_players: number;
-    private win_condition: number;
-    private players: number[] = [];
+    private gameCode: string;
+    private hostPlayerId: number;
+    private cardDeck: CardDeck;
+    private playerIds: number[];
+    private roundIds: number[];
+    private timeLimit: number;
+    private maxPlayers: number;
+    private winCondition: number;
 
     constructor(game: {
-        game_code: string,
-        card_deck_id: number,
-        time_limit: number,
-        max_players: number,
-        win_condition: number
+        gameCode?: string;
+        hostPlayerId: number;
+        cardDeck: CardDeck;
+        playerIds: number[];
+        roundIds: number[];
+        timeLimit: number;
+        maxPlayers: number;
+        winCondition: number;
     }) {
-        this.game_code = game.game_code;
-        this.card_deck_id = game.card_deck_id;
-        this.time_limit = game.time_limit;
-        this.max_players = game.max_players;
-        this.win_condition = game.win_condition;
+        this.gameCode = game.gameCode || this.generateGameCode();
+        this.hostPlayerId = game.hostPlayerId;
+        this.cardDeck = game.cardDeck;
+        this.playerIds = game.playerIds;
+        this.roundIds = game.roundIds;
+        this.timeLimit = game.timeLimit;
+        this.maxPlayers = game.maxPlayers;
+        this.winCondition = game.winCondition;
+    }
+
+    getGameCode(): string {
+        return this.gameCode;
+    }
+
+    getHostPlayerId(): number {
+        return this.hostPlayerId;
+    }
+
+    getCardDeck(): CardDeck {
+        return this.cardDeck;
+    }
+
+    getPlayerIds(): number[] {
+        return this.playerIds;
+    }
+
+    getRoundIds(): number[] {
+        return this.roundIds;
+    }
+
+    getTimeLimit(): number {
+        return this.timeLimit;
+    }
+
+    getMaxPlayers(): number {
+        return this.maxPlayers;
+    }
+
+    getWinCondition(): number {
+        return this.winCondition;
+    }
+
+    generateGameCode(): string {
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let gameCode = "";
+        for (let i = 0; i < 4; i++) {
+            gameCode += letters.charAt(Math.floor(Math.random() * letters.length));
+        }
+        return gameCode;
     }
 
     addPlayer(playerId: number): void {
-        if (this.players.length < this.max_players) {
-            this.players.push(playerId);
+        if (this.playerIds.length < this.maxPlayers) {
+            this.playerIds.push(playerId);
         } else {
             throw new Error("Maximum number of players reached");
         }
     }
 
-    getGameCode() {
-        return this.game_code;
-    }
-
-    getCardDeckId() {
-        return this.card_deck_id;
-    }
-
-    getTimeLimit() {
-        return this.time_limit;
-    }
-
-    getMaxPlayers() {
-        return this.max_players;
-    }
-
-    getWinCondition() {
-        return this.win_condition;
+    static from({
+        gameCode,
+        hostPlayerId,
+        cardDeck,
+        players,
+        rounds,
+        timeLimit,
+        maxPlayers,
+        winCondition
+    }: GamePrisma & {
+        cardDeck: CardDeckPrisma & {
+            cards: CardInDeckPrisma[];
+        };
+        players: PlayerPrisma[];
+        rounds: RoundPrisma[];
+    }) {
+        return new Game({
+            gameCode,
+            hostPlayerId,
+            cardDeck: CardDeck.from(cardDeck),
+            playerIds: players.map((player) => player.id),
+            roundIds: rounds.map((round) => round.id),
+            timeLimit,
+            maxPlayers,
+            winCondition
+        });
     }
 }

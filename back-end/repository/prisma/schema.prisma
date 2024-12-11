@@ -1,0 +1,87 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model Game {
+    gameCode     String   @id
+    hostPlayer   Player   @relation("Host", fields: [hostPlayerId], references: [id])
+    hostPlayerId Int      @unique
+    cardDeck     CardDeck @relation(fields: [cardDeckId], references: [id])
+    cardDeckId   Int
+    players      Player[]
+    rounds       Round[]
+    timeLimit    Int
+    maxPlayers   Int
+    winCondition Int
+}
+
+model Player {
+    id             Int             @id
+    game           Game            @relation(fields: [gameCode], references: [gameCode])
+    gameCode       String
+    hostGame       Game?           @relation("Host")
+    rounds         PlayerInRound[]
+    cardCzarRounds Round[]
+    winningRounds  Round[]         @relation("Winner")
+    username       String
+    score          Int
+}
+
+model PlayerInRound {
+    player      Player    @relation(fields: [playerId], references: [id])
+    playerId    Int
+    round       Round     @relation(fields: [roundId], references: [id])
+    roundId     Int
+    whiteCard   WhiteCard @relation(fields: [whiteCardId], references: [id])
+    whiteCardId Int
+
+    @@id([playerId, roundId])
+}
+
+model Round {
+    id          Int             @id
+    game        Game            @relation(fields: [gameCode], references: [gameCode])
+    gameCode    String
+    cardCzar    Player          @relation(fields: [cardCzarId], references: [id])
+    cardCzarId  Int
+    winner      Player          @relation("Winner", fields: [winnerId], references: [id])
+    winnerId    Int
+    blackCard   BlackCard       @relation(fields: [blackCardId], references: [id])
+    blackCardId Int
+    players     PlayerInRound[]
+    roundNumber Int
+}
+
+model WhiteCard {
+    id              Int             @id
+    playersInRounds PlayerInRound[]
+    text            String
+}
+
+model BlackCard {
+    id     Int          @id
+    rounds Round[]
+    decks  CardInDeck[]
+    text   String
+}
+
+model CardInDeck {
+    blackCard   BlackCard @relation(fields: [blackCardId], references: [id])
+    blackCardId Int
+    cardDeck    CardDeck  @relation(fields: [cardDeckId], references: [id])
+    cardDeckId  Int
+
+    @@id([blackCardId, cardDeckId])
+}
+
+model CardDeck {
+    id       Int          @id
+    games    Game[]
+    cards    CardInDeck[]
+    deckName String
+}

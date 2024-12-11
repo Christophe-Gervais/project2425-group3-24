@@ -1,0 +1,116 @@
+.main {
+  margin-top: 8rem;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.h1 {
+  margin-bottom: 1rem;
+  text-align: center;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 64px;
+}
+
+.article {
+  width: 15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.h2 {
+  font-family: "Kanit", sans-serif;
+  font-size: 24px;
+}
+
+.lineInput {
+  margin-bottom: 1.5rem;
+  padding: 0.2rem 0;
+  width: 110%;
+  font-family: "Open Sans", sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  border-bottom: solid 3px #111;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.h3 {
+  font-family: "Kanit", sans-serif;
+  font-size: 24px;
+}
+
+.div {
+  height: 3rem;
+  width: 100%;
+  display: flex;
+  transition: box-shadow 0.2s ease;
+  z-index: 1;
+}
+
+.div:hover {
+  box-shadow: 10px 10px #ccc;
+}
+
+.boxInput {
+  padding: 0.7rem 1rem;
+  width: 3.2rem;
+  font-family: "Open Sans", sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  border: solid 3px #111;
+}
+
+.boxInput:focus {
+  outline-width: 2px;
+  outline-style: solid;
+  outline-offset: -5px;
+}
+
+.join {
+  font-family: "Kanit", sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  border: solid 3px #111;
+  border-left: none;
+  flex-grow: 1;
+}
+
+.join:hover {
+  text-decoration: underline;
+}
+
+.h4 {
+  margin: 1rem;
+  width: 110%; 
+  background-color: transparent;
+  font-family: "Kanit", sans-serif;
+  font-size: 18px;
+  text-align: center; 
+  line-height: 0.1em;
+  border-bottom: 2px solid #000; 
+} 
+
+.span {
+   padding: 0 10px; 
+}
+
+.create {
+  height: 3.2rem;
+  width: 100%;
+  background-color: #111;
+  color: #eee;
+  font-family: "Kanit", sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  transition: box-shadow 0.2s ease;
+}
+
+.create:hover {
+  text-decoration: underline;
+  box-shadow: 10px 10px #ccc;
+}

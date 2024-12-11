@@ -1,11 +1,4 @@
-import { Card_Deck } from "../model/card_deck";
-
-const card_decks = [
-    new Card_Deck({
-        card_deck_id: 1,
-        deck_name: "Default"
-    }),
-]
+import { CardDeck } from "../model/cardDeck";
 
 const getCardDeckById =({ id }: { id: number }): Card_Deck | null => {
     try {

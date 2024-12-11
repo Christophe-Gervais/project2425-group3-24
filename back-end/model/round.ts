@@ -1,41 +1,90 @@
+import {
+    Round as RoundPrisma,
+    PlayerInRound as PlayerInRoundPrisma,
+    CardInDeck as CardInDeckPrisma,
+    BlackCard as BlackCardPrisma
+} from '@prisma/client';
+import { BlackCard } from "./blackCard";
+import { PlayerInRound } from "./playerInRound";
+
 export class Round {
-    private round_id: number;
-    private card_czar_id: number;
-    private game_id: number;
-    private black_card_id: number;
-    private winner_id: number;
+    private id?: number;
+    private gameCode: string;
+    private cardCzarId: number;
+    private winnerId: number;
+    private blackCard: BlackCard;
+    private players: PlayerInRound[];
+    private roundNumber: number;
 
     constructor(round: {
-        round_id: number,
-        card_czar_id: number,
-        game_id: number,
-        black_card_id: number,
-        winner_id: number
+        id?: number;
+        gameCode: string;
+        cardCzarId: number;
+        winnerId: number;
+        blackCard: BlackCard;
+        players: PlayerInRound[];
+        roundNumber: number;
     }) {
-        this.round_id = round.round_id;
-        this.card_czar_id = round.card_czar_id;
-        this.game_id = round.game_id;
-        this.black_card_id = round.black_card_id;
-        this.winner_id = round.winner_id;
+        this.id = round.id;
+        this.gameCode = round.gameCode;
+        this.cardCzarId = round.cardCzarId;
+        this.winnerId = round.winnerId;
+        this.blackCard = round.blackCard;
+        this.players = round.players;
+        this.roundNumber = round.roundNumber;
     }
 
-    getRoundId() {
-        return this.round_id;
+    getId(): number | undefined {
+        return this.id;
     }
 
-    getCardCzarId() {
-        return this.card_czar_id;
+    getGameCode(): string {
+        return this.gameCode;
     }
 
-    getGameId() {
-        return this.game_id;
+    getCardCzarId(): number {
+        return this.cardCzarId;
     }
 
-    getBlackCardId() {
-        return this.black_card_id;
+    getWinnerId(): number {
+        return this.winnerId;
     }
 
-    getWinnerId() {
-        return this.winner_id;
+    getBlackCard(): BlackCard {
+        return this.blackCard;
+    }
+
+    getPlayers(): PlayerInRound[] {
+        return this.players;
+    }
+
+    getRoundNumber(): number {
+        return this.roundNumber;
+    }
+
+    static from({
+        id,
+        gameCode,
+        cardCzarId,
+        winnerId,
+        blackCard,
+        players,
+        roundNumber
+    }: RoundPrisma & {
+        blackCard: BlackCardPrisma & {
+            rounds: RoundPrisma[];
+            decks: CardInDeckPrisma[];
+        };
+        players: PlayerInRoundPrisma[];
+    }) {
+        return new Round({
+            id,
+            gameCode,
+            cardCzarId,
+            winnerId,
+            blackCard: BlackCard.from(blackCard),
+            players: players.map((player) => PlayerInRound.from(player)),
+            roundNumber
+        });
     }
 }
