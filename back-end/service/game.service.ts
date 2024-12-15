@@ -1,25 +1,36 @@
 import { id } from 'date-fns/locale';
 import { Game } from '../model/game';
+import { CardDeck } from '../model/cardDeck';
 import gameDb from '../repository/game.db';
+import cardDeckDb from '../repository/cardDeck.db';
 
 export class GameService {
     private readonly maxAttempts = 10;
 
-    createGame(cardDeckId: number, timeLimit: number, maxPlayers: number, winCondition: number): Game | Error {
+    async createGame(cardDeckId: number, timeLimit: number, maxPlayers: number, winCondition: number): Promise<Game | Error> {
+
+        const cardDeck = await cardDeckDb.getCardDeckById(cardDeckId);
+        if (!cardDeck) {
+            return new Error("Card deck not found");
+        }
+
         let attempts = 0;
 
         while (attempts < this.maxAttempts) {
-            const code = this.generateCode();
+            const code = this.generateGameCode();
 
             if (!gameDb.gameExists(code)) {
                 const newGame = new Game({
-                    game_code: code,
-                    card_deck_id: cardDeckId,
-                    time_limit: timeLimit,
-                    max_players: maxPlayers,
-                    win_condition: winCondition
+                    gameCode: code,
+                    cardDeck: cardDeck,
+                    timeLimit: timeLimit,
+                    maxPlayers: maxPlayers,
+                    winCondition: winCondition,
+                    playerIds: [],
+                    roundIds: [],
+                    hostPlayerId: 0
                 });
-                gameDb.addGame(newGame);
+                await gameDb.createGame(newGame);
                 return newGame;
             }
 
@@ -29,10 +40,10 @@ export class GameService {
         return new Error("Unable to generate a unique game code. Please try again.");
     }
 
-    joinGame(gameCode: string, playerId: number): Game | Error {
-        const game = gameDb.getGamesById({ id: gameCode });
+    async joinGame(gameCode: string, playerId: number): Promise<Game | Error> { 
+        const game = await gameDb.getGameByGameCode(gameCode);
 
-        if (game === undefined || game === null) {
+        if (!game) {
             return new Error("Game not found");
         }
 
@@ -40,5 +51,14 @@ export class GameService {
         return game;
     }
 
-    
+    generateGameCode(): string {
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let gameCode = "";
+        for (let i = 0; i < 4; i++) {
+            gameCode += letters.charAt(Math.floor(Math.random() * letters.length));
+        }
+        return gameCode;
+    }
+
+
 }

@@ -56,7 +56,6 @@ const getPlayerById = async ({ id }: { id: number }): Promise<Player | null> => 
                 winningRounds: true
             }
         });
-
         return playerPrisma ? Player.from(playerPrisma) : null;
     } catch (error) {
         console.error(error);
@@ -64,8 +63,39 @@ const getPlayerById = async ({ id }: { id: number }): Promise<Player | null> => 
     }
 };
 
+const deletePlayer = async (playerId: number): Promise<void> => {
+    try {
+        await database.player.delete({
+            where: { id: playerId }
+        });
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+const getAllPlayers = async (): Promise<Player[]> => {
+    try {
+        const playersPrisma = await database.player.findMany({
+            include: {
+                rounds: true, 
+                cardCzarRounds: true,
+                winningRounds: true 
+            }
+        });
+
+        return playersPrisma.map(player => Player.from(player));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+
 export default {
     createPlayer,
     updatePlayer,
-    getPlayerById
-}
+    getPlayerById,
+    deletePlayer,
+    getAllPlayers
+};

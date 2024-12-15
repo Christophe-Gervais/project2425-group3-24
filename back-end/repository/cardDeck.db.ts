@@ -1,14 +1,30 @@
+import { PrismaClient, Prisma } from '@prisma/client';
 import { CardDeck } from "../model/cardDeck";
+import database from './database';
 
-const getCardDeckById =({ id }: { id: number }): Card_Deck | null => {
+
+const getCardDeckById = async (cardDeckId: number): Promise<CardDeck | null> => {
     try {
-        return card_decks.find((card_deck) => card_deck.getCardDeckId() === id) || null;
+        const cardDeckData = await database.cardDeck.findUnique({
+            where: { id: cardDeckId },
+            include: { cards: true }, 
+        });
+
+        if (!cardDeckData) {
+            return null; 
+        }
+
+        return CardDeck.from({
+            id: cardDeckData.id,
+            deckName: cardDeckData.deckName,
+            cards: cardDeckData.cards,
+        });
     } catch (error) {
-        console.error(error);
-        throw new Error("An error occurred while getting a card deck by id");
+        console.error("Error fetching card deck:", error);
+        return null; 
     }
-}
+};
 
 export default {
     getCardDeckById,
-}
+};

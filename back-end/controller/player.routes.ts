@@ -12,7 +12,7 @@ router.post("/create", (req: Request, res: Response) => {
         return res.status(400).json({ error: "Username is required" });
     }
 
-    const result = playerService.createPlayer(username);
+    const result = playerService.createPlayer(username, "gameCode");
 
     if (result instanceof Error) {
         return res.status(500).json({ error: result.message });
@@ -23,7 +23,7 @@ router.post("/create", (req: Request, res: Response) => {
 
 router.get("/getAllPlayers", (req: Request, res: Response) => {
     try {
-        const players = playerService.getPlayers();
+        const players = playerService.getAllPlayers();
         return res.status(200).json({ players });
     } catch (error) {
         return res.status(500).json({ error: "Failed to retrieve players" });

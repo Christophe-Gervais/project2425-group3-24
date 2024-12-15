@@ -76,8 +76,39 @@ const getGameByGameCode = async (gameCode: string): Promise<Game | null> => {
     }
 };
 
+const gameExists = async (gameCode: string): Promise<boolean> => {
+    const game = await database.game.findUnique({
+        where: { gameCode },
+    });
+    return game !== null;
+};
+
+const getAllGames = async (): Promise<Game[]> => {
+    try {
+        const gamesPrisma = await database.game.findMany({
+            include: {
+                cardDeck: {
+                    include: {
+                        cards: true
+                    }
+                },
+                players: true,
+                rounds: true
+            }
+        });
+
+        return gamesPrisma.map((game) => Game.from(game));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+
 export default {
     createGame,
     updateGame,
-    getGameByGameCode
+    getGameByGameCode,
+    gameExists,
+    getAllGames
 };

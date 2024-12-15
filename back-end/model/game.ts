@@ -27,7 +27,7 @@ export class Game {
         maxPlayers: number;
         winCondition: number;
     }) {
-        this.gameCode = game.gameCode || this.generateGameCode();
+        this.gameCode = game.gameCode || this.getGameCode();
         this.hostPlayerId = game.hostPlayerId;
         this.cardDeck = game.cardDeck;
         this.playerIds = game.playerIds;
@@ -67,15 +67,6 @@ export class Game {
 
     getWinCondition(): number {
         return this.winCondition;
-    }
-
-    generateGameCode(): string {
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        let gameCode = "";
-        for (let i = 0; i < 4; i++) {
-            gameCode += letters.charAt(Math.floor(Math.random() * letters.length));
-        }
-        return gameCode;
     }
 
     addPlayer(playerId: number): void {
