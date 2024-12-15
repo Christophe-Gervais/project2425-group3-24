@@ -91,7 +91,6 @@ const getAllPlayers = async (): Promise<Player[]> => {
     }
 };
 
-
 export default {
     createPlayer,
     updatePlayer,
