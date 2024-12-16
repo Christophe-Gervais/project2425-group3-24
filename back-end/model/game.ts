@@ -21,20 +21,20 @@ export class Game {
         gameCode?: string;
         hostPlayerId: number;
         cardDeck: CardDeck;
-        playerIds: number[];
-        roundIds: number[];
-        timeLimit: number;
-        maxPlayers: number;
-        winCondition: number;
+        playerIds?: number[];
+        roundIds?: number[];
+        timeLimit?: number;
+        maxPlayers?: number;
+        winCondition?: number;
     }) {
-        this.gameCode = game.gameCode || this.getGameCode();
+        this.gameCode = game.gameCode || this.generateGameCode();
         this.hostPlayerId = game.hostPlayerId;
         this.cardDeck = game.cardDeck;
-        this.playerIds = game.playerIds;
-        this.roundIds = game.roundIds;
-        this.timeLimit = game.timeLimit;
-        this.maxPlayers = game.maxPlayers;
-        this.winCondition = game.winCondition;
+        this.playerIds = game.playerIds || [this.hostPlayerId];
+        this.roundIds = game.roundIds || [];
+        this.timeLimit = game.timeLimit || 60;
+        this.maxPlayers = game.maxPlayers || 4;
+        this.winCondition = game.winCondition || 3000;
     }
 
     getGameCode(): string {
@@ -43,6 +43,10 @@ export class Game {
 
     getHostPlayerId(): number {
         return this.hostPlayerId;
+    }
+
+    setCardDeck(cardDeck: CardDeck) {
+        this.cardDeck = cardDeck;
     }
 
     getCardDeck(): CardDeck {
@@ -69,12 +73,13 @@ export class Game {
         return this.winCondition;
     }
 
-    addPlayer(playerId: number): void {
-        if (this.playerIds.length < this.maxPlayers) {
-            this.playerIds.push(playerId);
-        } else {
-            throw new Error("Maximum number of players reached");
+    generateGameCode(): string {
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        let gameCode = "";
+        for (let i = 0; i < 4; i++) {
+            gameCode += letters.charAt(Math.floor(Math.random() * letters.length));
         }
+        return gameCode;
     }
 
     static from({

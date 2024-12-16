@@ -1,9 +1,8 @@
-import express, { Request, Response } from "express";
-import { Player } from "../model/player";
-import { PlayerService } from "../service/player.service";
+import express, { NextFunction, Request, Response } from "express";
+import { PlayerInput } from "../types";
+import playerService from "../service/player.service";
 
-const router = express.Router();
-const playerService = new PlayerService();
+const playerRouter = express.Router();
 
 /**
  * @swagger
@@ -14,10 +13,10 @@ const playerService = new PlayerService();
 
 /**
  * @swagger
- * /api/players/create:
+ * /api/player/create:
  *   post:
  *     summary: Create a new player
- *     description: Create a new player by providing a username.
+ *     description: Create a new player by providing an username and optionally a game code.
  *     tags: [Player]
  *     requestBody:
  *       required: true
@@ -29,6 +28,9 @@ const playerService = new PlayerService();
  *               username:
  *                 type: string
  *                 description: The name of the player.
+ *               gameCode:
+ *                 type: string
+ *                 description: The game code of the game which the player joins.
  *     responses:
  *       201:
  *         description: Player created successfully
@@ -37,50 +39,22 @@ const playerService = new PlayerService();
  *       500:
  *         description: Internal server error
  */
-router.post("/create", (req: Request, res: Response) => {
-    const { username } = req.body;
-
-    if (!username) {
-        return res.status(400).json({ error: "Username is required" });
-    }
-
-    const result = playerService.createPlayer(username, "gameCode");
-
-    if (result instanceof Error) {
-        return res.status(500).json({ error: result.message });
-    }
-
-    return res.status(201).json({ player: result });
-});
-
-/**
- * @swagger
- * /api/players/getAllPlayers:
- *   get:
- *     summary: Get all players
- *     description: Retrieve a list of all players.
- *     tags: [Player]
- *     responses:
- *       200:
- *         description: List of players
- *       500:
- *         description: Internal server error
- */
-router.get("/getAllPlayers", (req: Request, res: Response) => {
+playerRouter.post('/create', async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const players = playerService.getAllPlayers();
-        return res.status(200).json({ players });
+        const playerInput = <PlayerInput>req.body;
+        const player = await playerService.createPlayer(playerInput);
+        res.status(200).json(player);
     } catch (error) {
-        return res.status(500).json({ error: "Failed to retrieve players" });
+        next(error);
     }
 });
 
 /**
  * @swagger
- * /api/players/update:
+ * /api/player/join:
  *   put:
- *     summary: Update an existing player
- *     description: Update a player's details by providing player ID and username.
+ *     summary: Join a game with an existing player
+ *     description: Join a game by providing a player with the game's game code.
  *     tags: [Player]
  *     requestBody:
  *       required: true
@@ -92,32 +66,25 @@ router.get("/getAllPlayers", (req: Request, res: Response) => {
  *               id:
  *                 type: integer
  *                 description: The player's ID.
- *               username:
+ *               gameCode:
  *                 type: string
- *                 description: The updated name of the player.
+ *                 description: The game's game code.
  *     responses:
  *       200:
- *         description: Player updated successfully
+ *         description: Player joined the game successfully
  *       400:
- *         description: Player ID and username are required
+ *         description: player ID and game code are required
  *       500:
  *         description: Internal server error
  */
-router.put("/update", (req: Request, res: Response) => {
-    const playerData = req.body;
-
-    if (!playerData.id || !playerData.username) {
-        return res.status(400).json({ error: "Player ID and username are required" });
+playerRouter.post('/join', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const playerInput = <PlayerInput>req.body;
+        const player = await playerService.joinGameById(playerInput);
+        res.status(200).json(player);
+    } catch (error) {
+        next(error);
     }
-
-    const player = new Player(playerData);
-    const result = playerService.updatePlayer(player);
-
-    if (result instanceof Error) {
-        return res.status(500).json({ error: result.message });
-    }
-
-    return res.status(200).json({ player: result });
 });
 
-export default router;
+export { playerRouter };

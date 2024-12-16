@@ -5,8 +5,7 @@ const createPlayer = async (player: Player): Promise<Player> => {
     try {
         const playerPrisma = await database.player.create({
             data: {
-                id: player.getId()!,
-                gameCode: player.getGameCode(),
+                gameCode: player.getGameCode() || null,
                 username: player.getUsername(),
                 score: player.getScore()
             },
@@ -74,27 +73,9 @@ const deletePlayer = async (playerId: number): Promise<void> => {
     }
 };
 
-const getAllPlayers = async (): Promise<Player[]> => {
-    try {
-        const playersPrisma = await database.player.findMany({
-            include: {
-                rounds: true, 
-                cardCzarRounds: true,
-                winningRounds: true 
-            }
-        });
-
-        return playersPrisma.map(player => Player.from(player));
-    } catch (error) {
-        console.error(error);
-        throw new Error('Database error. See server log for details.');
-    }
-};
-
 export default {
     createPlayer,
     updatePlayer,
     getPlayerById,
-    deletePlayer,
-    getAllPlayers
+    deletePlayer
 };

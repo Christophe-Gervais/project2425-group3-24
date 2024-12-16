@@ -21,9 +21,9 @@ model Game {
 }
 
 model Player {
-    id             Int             @id
-    game           Game            @relation(fields: [gameCode], references: [gameCode])
-    gameCode       String
+    id             Int             @id @default(autoincrement())
+    game           Game?           @relation(fields: [gameCode], references: [gameCode])
+    gameCode       String?
     hostGame       Game?           @relation("Host")
     rounds         PlayerInRound[]
     cardCzarRounds Round[]
@@ -44,7 +44,7 @@ model PlayerInRound {
 }
 
 model Round {
-    id          Int             @id
+    id          Int             @id @default(autoincrement())
     game        Game            @relation(fields: [gameCode], references: [gameCode])
     gameCode    String
     cardCzar    Player          @relation(fields: [cardCzarId], references: [id])
@@ -58,13 +58,13 @@ model Round {
 }
 
 model WhiteCard {
-    id              Int             @id
+    id              Int             @id @default(autoincrement())
     playersInRounds PlayerInRound[]
     text            String
 }
 
 model BlackCard {
-    id     Int          @id
+    id     Int          @id @default(autoincrement())
     rounds Round[]
     decks  CardInDeck[]
     text   String
@@ -80,7 +80,7 @@ model CardInDeck {
 }
 
 model CardDeck {
-    id       Int          @id
+    id       Int          @id @default(autoincrement())
     games    Game[]
     cards    CardInDeck[]
     deckName String

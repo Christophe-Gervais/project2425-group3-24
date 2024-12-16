@@ -1,11 +1,11 @@
 import * as dotenv from 'dotenv';
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import * as bodyParser from 'body-parser';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import gameRouter from './controller/game.routes';
-import playerRouter from './controller/player.routes';
+import { gameRouter } from './controller/game.routes'; 
+import { playerRouter } from './controller/player.routes';
 
 dotenv.config();
 const app = express();
@@ -39,8 +39,13 @@ app.get('/status', (req, res) => {
     res.json({ message: 'Back-end is running...' });
 });
 
-app.use('/api/games', gameRouter);
-app.use('/api/players', playerRouter);
+app.use('/api/game', gameRouter); 
+app.use('/api/player', playerRouter);
+
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+    console.log(error.name);
+    console.log(error.message);
+});
 
 app.listen(port, () => {
     console.log(`Back-end is running on port ${port}.`);

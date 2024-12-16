@@ -26,9 +26,8 @@
 }
 
 .lineInput {
-  margin-bottom: 1.5rem;
   padding: 0.2rem 0;
-  width: 110%;
+  width: 100%;
   font-family: "Open Sans", sans-serif;
   font-size: 18px;
   font-weight: bold;
@@ -39,12 +38,21 @@
   transition: box-shadow 0.2s ease;
 }
 
-.h3 {
+.errorSpan {
+  left: 18.2rem;
+  bottom: 2rem;
+  width: 320px;
+  height: 24px;
+  background: transparent;
+  color: red;
   font-family: "Kanit", sans-serif;
-  font-size: 24px;
+  font-size: 16px;
+  text-align: left;
+  position: relative;
+  z-index: 1;
 }
 
-.div {
+.form {
   height: 3rem;
   width: 100%;
   display: flex;
@@ -52,7 +60,7 @@
   z-index: 1;
 }
 
-.div:hover {
+.form:hover {
   box-shadow: 10px 10px #ccc;
 }
 
@@ -84,16 +92,17 @@
   text-decoration: underline;
 }
 
-.h4 {
+.h3 {
   margin: 1rem;
+  margin-top: -10px;
   width: 110%; 
   background-color: transparent;
   font-family: "Kanit", sans-serif;
   font-size: 18px;
   text-align: center; 
   line-height: 0.1em;
-  border-bottom: 2px solid #000; 
-} 
+  border-bottom: 3px solid #000; 
+}
 
 .span {
    padding: 0 10px; 

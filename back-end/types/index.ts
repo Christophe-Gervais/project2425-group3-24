@@ -1,9 +1,9 @@
 type GameInput = {
     gameCode: string,
-    hostPlayer: PlayerInput,
-    cardDeck: CardDeckInput,
-    players: PlayerInput[],
-    rounds: RoundInput[],
+    hostPlayerId: number,
+    cardDeckId: number,
+    playerIds: number[],
+    roundIds: number[],
     timeLimit: number,
     maxPlayers: number,
     winCondition: number
@@ -11,51 +11,51 @@ type GameInput = {
 
 type PlayerInput = {
     id?: number,
-    game: GameInput,
-    hostGame: GameInput,
+    gameCode: string,
+    hostGameCode: string,
     rounds: PlayerInRoundInput[],
-    cardCzarRounds: RoundInput[],
-    winningRounds: RoundInput[],
+    cardCzarRoundIds: number[],
+    winningRoundIds: number[],
     username: string,
     score: number
 }
 
 type PlayerInRoundInput = {
-    player: PlayerInput,
-    round: RoundInput,
-    whiteCard: WhiteCardInput
+    playerId: number,
+    roundId: number,
+    whiteCardId: number
 }
 
 type RoundInput = {
     id?: number,
-    game: GameInput,
-    cardCzar: PlayerInput,
-    winner: PlayerInput,
+    gameCode: number,
+    cardCzarId: number,
+    winnerId: number,
     blackCard: BlackCardInput,
-    players: PlayerInput[],
+    players: PlayerInRoundInput[],
     roundNumber: number
 }
 
 type WhiteCardInput = {
     id?: number,
-    playersInRounds: PlayerInRoundInput,
+    playerInRounds: PlayerInRoundInput[],
     text: string
 }
 
 type BlackCardInput = {
     id?: number,
-    rounds: RoundInput[],
+    roundIds: number[],
+    decks: CardInDeckInput[],
     text: string
 }
 
 type CardInDeckInput = {
-    blackCard: BlackCardInput,
-    cardDeck: CardDeckInput
+    blackCardId: number,
+    cardDeckId: number
 }
 
 type CardDeckInput = {
     id?: number,
-    games: GameInput[],
     cards: CardInDeckInput[],
     deckName: string
 }

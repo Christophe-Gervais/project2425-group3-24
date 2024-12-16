@@ -1,8 +1,11 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/twPj_hbU)
-# Project template
 
-To get started, open the Readme.md files in the analysis, back-end and front-end folders.
+# Cards against Humanity
 
-Change this readme file to describe your project, change the title and fill in your name below.
+Cards against humanity is a party card game where
+players complete prompts using humorous, offensive or absurd answers. Players will be
+shown a black card as a round starts, a single player is then randomly chosen “Card
+Czar” while other players must submit their responses as white cards. The Card Czar
+then chooses their favorite answer and the player with that card wins a point.
 
-### \<Student 1 name\> / \<Student 2 name\>
+### Arne Stoel / Christophe Gervais

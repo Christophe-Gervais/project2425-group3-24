@@ -1,30 +1,62 @@
-import { PrismaClient, Prisma } from '@prisma/client';
-import { CardDeck } from "../model/cardDeck";
+import { CardDeck } from '../model/cardDeck';
 import database from './database';
 
-
-const getCardDeckById = async (cardDeckId: number): Promise<CardDeck | null> => {
+const createCardDeck = async (cardDeck: CardDeck): Promise<CardDeck> => {
     try {
-        const cardDeckData = await database.cardDeck.findUnique({
-            where: { id: cardDeckId },
-            include: { cards: true }, 
+        const cardDeckPrisma = await database.cardDeck.create({
+            data: {
+                deckName: cardDeck.getDeckName()
+            },
+            include: {
+                cards: {
+                    include: {  blackCard: true }
+                }
+            }
         });
-
-        if (!cardDeckData) {
-            return null; 
-        }
-
-        return CardDeck.from({
-            id: cardDeckData.id,
-            deckName: cardDeckData.deckName,
-            cards: cardDeckData.cards,
-        });
+        return CardDeck.from(cardDeckPrisma);
     } catch (error) {
-        console.error("Error fetching card deck:", error);
-        return null; 
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+const getCardDeckById = async (id: number): Promise<CardDeck | null> => {
+    try {
+        const cardDeckPrisma = await database.cardDeck.findUnique({
+            where: { id },
+            include: {
+                cards: {
+                    include: {  blackCard: true }
+                }
+            }
+        });
+
+        return cardDeckPrisma ? CardDeck.from(cardDeckPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+const getAllCardDecks = async (): Promise<CardDeck[]> => {
+    try {
+        const cardDeckPrisma = await database.cardDeck.findMany({
+            include: {
+                cards: {
+                    include: {  blackCard: true }
+                }
+            }
+        });
+
+        return cardDeckPrisma.map((cardDeck) => CardDeck.from(cardDeck));
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
     }
 };
 
 export default {
+    createCardDeck,
     getCardDeckById,
+    getAllCardDecks
 };

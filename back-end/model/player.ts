@@ -7,7 +7,7 @@ import { PlayerInRound } from './playerInRound';
 
 export class Player {
     private id?: number;
-    private gameCode: string;
+    private gameCode?: string;
     private rounds: PlayerInRound[];
     private cardCzarRoundIds: number[];
     private winningRoundIds: number[];
@@ -16,18 +16,20 @@ export class Player {
 
     constructor(player: {
         id?: number;
-        gameCode: string;
-        rounds: PlayerInRound[];
-        cardCzarRoundIds: number[];
-        winningRoundIds: number[];
+        gameCode?: string;
+        rounds?: PlayerInRound[];
+        cardCzarRoundIds?: number[];
+        winningRoundIds?: number[];
         username: string;
         score: number;
     }) {
+        this.validate(player);
+
         this.id = player.id;
         this.gameCode = player.gameCode;
-        this.rounds = player.rounds;
-        this.cardCzarRoundIds = player.cardCzarRoundIds;
-        this.winningRoundIds = player.winningRoundIds;
+        this.rounds = player.rounds || [];
+        this.cardCzarRoundIds = player.cardCzarRoundIds || [];
+        this.winningRoundIds = player.winningRoundIds || [];
         this.username = player.username;
         this.score = player.score;
     }
@@ -36,7 +38,11 @@ export class Player {
         return this.id;
     }
 
-    getGameCode(): string {
+    setGameCode(gameCode: string) {
+        this.gameCode = gameCode;
+    }
+
+    getGameCode(): string | undefined {
         return this.gameCode;
     }
 
@@ -60,6 +66,18 @@ export class Player {
         return this.score;
     }
 
+    validate(player: {
+        username: string;
+        score?: number;
+    }) {
+        if (!player.username?.trim()) {
+            throw new Error('Username is required');
+        }
+        if (player.score! < 0) {
+            throw new Error("Score must be a positive integer or zero");
+        }
+    }
+
     static from({
         id,
         gameCode,
@@ -75,7 +93,7 @@ export class Player {
     }) {
         return new Player({
             id,
-            gameCode,
+            gameCode: gameCode || undefined,
             rounds: rounds.map((round) => PlayerInRound.from(round)),
             cardCzarRoundIds: cardCzarRounds.map((cardCzarRound) => cardCzarRound.id),
             winningRoundIds: winningRounds.map((winningRound) => winningRound.id),
