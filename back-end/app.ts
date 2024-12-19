@@ -4,12 +4,17 @@ import cors from 'cors';
 import * as bodyParser from 'body-parser';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import expressWs from 'express-ws';
 import { gameRouter } from './controller/game.routes'; 
 import { playerRouter } from './controller/player.routes';
+import { socketRouter, mountSocketRouter } from './controller/socket.routes';
 
 dotenv.config();
-const app = express();
+const expr = express();
+const app = expressWs(expr).app;
 const port = process.env.APP_PORT || 3000;
+
+mountSocketRouter();
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -39,8 +44,11 @@ app.get('/status', (req, res) => {
     res.json({ message: 'Back-end is running...' });
 });
 
+
 app.use('/api/game', gameRouter); 
 app.use('/api/player', playerRouter);
+
+app.use('/api/socket', socketRouter);
 
 app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
     console.log(error.name);

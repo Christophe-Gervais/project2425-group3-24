@@ -14,4 +14,23 @@ const createGame = async ({ hostPlayerId, cardDeckId }: GameInput): Promise<Game
     return await gameDB.createGame(game);
 };
 
-export default { createGame };
+const deleteGameByGameCode = async (gameCode: string) => {
+    await gameDB.deleteGameByGameCode(gameCode);
+
+    return;
+};
+
+const getGameByGameCode = async (gameCode: string): Promise<Game | null> => {
+    let game = await gameDB.getGameByGameCode(gameCode);
+    if (!game) {
+        //throw new Error(`Game with game code ${gameCode} does not exist.`);
+        game = null;
+    }    
+    return game;
+};
+
+export default { 
+    createGame,
+    deleteGameByGameCode,
+    getGameByGameCode
+};

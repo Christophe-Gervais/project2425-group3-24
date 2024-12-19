@@ -22,7 +22,7 @@ const createPlayer = async (player: Player): Promise<Player> => {
     }
 };
 
-const updatePlayer = async (player: Player): Promise<Player | null> => {
+const updatePlayerById = async (player: Player): Promise<Player | null> => {
     try {
         const playerPrisma = await database.player.update({
             where: { id: player.getId() },
@@ -39,6 +39,17 @@ const updatePlayer = async (player: Player): Promise<Player | null> => {
             }
         });
         return playerPrisma ? Player.from(playerPrisma) : null;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
+const deletePlayerById = async ({ id }: { id: number }) => {
+    try {
+        await database.player.delete({
+            where: { id: id }
+        });
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');
@@ -62,11 +73,17 @@ const getPlayerById = async ({ id }: { id: number }): Promise<Player | null> => 
     }
 };
 
-const deletePlayer = async (playerId: number): Promise<void> => {
+const getAllPlayersInGameByGameCode = async ({ gameCode }: { gameCode: string }): Promise<Array<Player> | null> => {
     try {
-        await database.player.delete({
-            where: { id: playerId }
+        const playerPrisma = await database.player.findMany({
+            where: { gameCode },
+            include: {
+                rounds: true,
+                cardCzarRounds: true,
+                winningRounds: true
+            }
         });
+        return playerPrisma ? playerPrisma.map((player) => Player.from(player)) : null;
     } catch (error) {
         console.error(error);
         throw new Error('Database error. See server log for details.');
@@ -75,7 +92,8 @@ const deletePlayer = async (playerId: number): Promise<void> => {
 
 export default {
     createPlayer,
-    updatePlayer,
+    updatePlayerById,
+    deletePlayerById,
     getPlayerById,
-    deletePlayer
+    getAllPlayersInGameByGameCode
 };

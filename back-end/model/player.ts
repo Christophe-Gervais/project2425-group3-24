@@ -38,7 +38,7 @@ export class Player {
         return this.id;
     }
 
-    setGameCode(gameCode: string) {
+    setGameCode(gameCode: string | undefined) {
         this.gameCode = gameCode;
     }
 
@@ -56,6 +56,10 @@ export class Player {
 
     getWinningRoundIds(): number[] {
         return this.winningRoundIds;
+    }
+
+    setUsername(username: string) {
+        this.username = username;
     }
 
     getUsername(): string {

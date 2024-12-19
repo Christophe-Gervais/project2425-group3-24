@@ -1,4 +1,5 @@
 .nav {
+    width: 100vw;
     display: flex;
     justify-content: space-between;
 }
@@ -22,10 +23,40 @@
     box-shadow: 10px 10px #ccc;
 }
 
+.div {
+    margin-right: calc(50vw - 260px);
+    width: 520px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .h1 {
-    margin-bottom: 1rem;
     text-align: center;
     font-family: "Bebas Neue", sans-serif;
     font-size: 64px;
-    flex-grow: 1;
-  }
+}
+
+.code {
+    font-family: "Kanit", sans-serif;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.code:hover {
+    text-decoration: underline;
+}
+
+.icon {
+    margin-left: 3px;
+}
+
+.toast {
+    font-family: "Kanit", sans-serif;
+    visibility: hidden;
+    color: green;
+}
+
+.visibleToast {
+    visibility: visible;
+}

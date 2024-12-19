@@ -1,24 +1,73 @@
-export type Course = {
-  id: number;
-  name: string;
-  description: string;
-  phase: number;
-  credits: number;
-};
+type Game = {
+  gameCode: string,
+  hostPlayerId: number,
+  cardDeckId: number,
+  playerIds: number[],
+  roundIds: number[],
+  timeLimit: number,
+  maxPlayers: number,
+  winCondition: number
+}
 
-export type Lecturer = {
-  id: number;
-  user: User;
-  expertise: string;
-  courses: Course[];
-};
+type Player = {
+  id?: number,
+  gameCode: string,
+  hostGameCode: string,
+  rounds: PlayerInRound[],
+  cardCzarRoundIds: number[],
+  winningRoundIds: number[],
+  username: string,
+  score: number
+}
 
-export type User = {
-  firstName?: string;
-  lastName?: string;
-  fullname?: string;
-  email?: string;
-  username?: string;
-  password?: string;
-  role?: string;
-};
+type PlayerInRound = {
+  playerId: number,
+  roundId: number,
+  whiteCardId: number
+}
+
+type Round = {
+  id?: number,
+  gameCode: number,
+  cardCzarId: number,
+  winnerId: number,
+  blackCard: BlackCard,
+  players: PlayerInRound[],
+  roundNumber: number
+}
+
+type WhiteCard = {
+  id?: number,
+  playerInRounds: PlayerInRound[],
+  text: string
+}
+
+type BlackCard = {
+  id?: number,
+  roundIds: number[],
+  decks: CardInDeck[],
+  text: string
+}
+
+type CardInDeck = {
+  blackCardId: number,
+  cardDeckId: number
+}
+
+type CardDeck = {
+  id?: number,
+  cards: CardInDeck[],
+  deckName: string
+}
+
+export type {
+  Game,
+  Player,
+  PlayerInRound,
+  Round,
+  WhiteCard,
+  BlackCard,
+  CardInDeck,
+  CardDeck
+}
+

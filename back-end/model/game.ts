@@ -41,6 +41,10 @@ export class Game {
         return this.gameCode;
     }
 
+    setHostPlayerId(hostPlayerId: number) {
+        this.hostPlayerId = hostPlayerId;
+    }
+
     getHostPlayerId(): number {
         return this.hostPlayerId;
     }

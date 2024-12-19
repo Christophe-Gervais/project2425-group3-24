@@ -1,5 +1,5 @@
-const createGame = async (hostPlayerId: number) => {
-  return await fetch(process.env.NEXT_PUBLIC_API_URL + "/game/create", {
+const createGame = (hostPlayerId: number) => {
+  return fetch(process.env.NEXT_PUBLIC_API_URL + "/game/create", {
     method: "POST",
     headers: {
         "Content-Type": "application/json"
@@ -8,8 +8,6 @@ const createGame = async (hostPlayerId: number) => {
   });
 };
 
-const GameService = {
-  createGame
-};
+const GameService = { createGame };
 
 export default GameService;

@@ -14,6 +14,7 @@ const JoinGameForm: React.FC = () => {
   const createGame = async () => {
     setUsernameError("");
     setGameCodeError("");
+    
     if(username === "") {
       setUsernameError("< Username is required");
       return;
@@ -40,6 +41,7 @@ const JoinGameForm: React.FC = () => {
       updatedPlayerResponse.json()
     ]);
 
+    sessionStorage.setItem("playerID", updatedPlayer.id);
     router.push("/" + createdGame.gameCode);
   };
 
@@ -72,6 +74,7 @@ const JoinGameForm: React.FC = () => {
       createdPlayerResponse.json()
     ]);
 
+    sessionStorage.setItem("playerID", createdPlayer.id);
     router.push("/" + createdPlayer.gameCode);
   };
   return (

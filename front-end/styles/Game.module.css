@@ -1,0 +1,96 @@
+.main {
+  margin: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.h2 {
+  font-family: "Kanit", sans-serif;
+  font-size: 24px;
+  text-align: center;
+}
+
+.overview {
+  min-width: 25rem;
+}
+
+.playerItem {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border: solid 3px #111;
+  box-shadow: 10px 10px #ccc;
+}
+
+.playerItem:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+.icon {
+  position: absolute;
+  margin-left: 10px;
+}
+
+.username {
+  margin-left: 2rem;
+  font-family: "Kanit", sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.score {
+  margin: 0 1rem;
+  font-family: "Kanit", sans-serif;
+  font-size: 20px;
+}
+
+.form {
+  width: 15rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.lineInput {
+  padding: 0.2rem 0;
+  width: 100%;
+  font-family: "Open Sans", sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  border-bottom: solid 3px #111;
+  outline: none;
+  transition: box-shadow 0.2s ease;
+}
+
+.errorSpan {
+  width: 320px;
+  left: 15.5rem;
+  bottom: 1.8rem;
+  height: 24px;
+  background: transparent;
+  color: red;
+  font-family: "Kanit", sans-serif;
+  font-size: 16px;
+  text-align: left;
+  position: relative;
+}
+
+.blackButton {
+  height: 3.2rem;
+  width: 100%;
+  background-color: #111;
+  color: #eee;
+  font-family: "Kanit", sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  transition: box-shadow 0.2s ease;
+}
+
+.blackButton:hover {
+  text-decoration: underline;
+  box-shadow: 10px 10px #ccc;
+}

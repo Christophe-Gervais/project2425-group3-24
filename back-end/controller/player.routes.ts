@@ -87,4 +87,34 @@ playerRouter.post('/join', async (req: Request, res: Response, next: NextFunctio
     }
 });
 
+playerRouter.put('/update', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const playerInput = <PlayerInput>req.body;
+        const player = await playerService.updatePlayerById(playerInput);
+        res.status(200).json(player);
+    } catch (error) {
+        next(error);
+    }
+});
+
+playerRouter.put('/delete', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const playerInput = <PlayerInput>req.body;
+        await playerService.deletePlayerById(playerInput);
+        res.status(200).json("Deleted");
+    } catch (error) {
+        next(error);
+    }
+});
+
+playerRouter.get('/:gameCode', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const gameCode = req.params.gameCode;
+        const players = await playerService.getAllPlayersInGameByGameCode(gameCode);
+        res.status(200).json(players);
+    } catch (error) {
+        next(error);
+    }
+});
+
 export { playerRouter };

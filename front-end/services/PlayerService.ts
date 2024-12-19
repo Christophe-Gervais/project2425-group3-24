@@ -1,5 +1,5 @@
-const createPlayer = async (username: string, gameCode?: string) => {
-  return await fetch(process.env.NEXT_PUBLIC_API_URL + "/player/create", {
+const createPlayer = (username: string, gameCode?: string) => {
+  return fetch(process.env.NEXT_PUBLIC_API_URL + "/player/create", {
     method: "POST",
     headers: {
         "Content-Type": "application/json"
@@ -8,8 +8,8 @@ const createPlayer = async (username: string, gameCode?: string) => {
   });
 };
 
-const joinGameById = async (id: number, gameCode: string) => {
-  return await fetch(process.env.NEXT_PUBLIC_API_URL + "/player/join", {
+const joinGameById = (id: number, gameCode: string) => {
+  return fetch(process.env.NEXT_PUBLIC_API_URL + "/player/join", {
     method: "POST",
     headers: {
         "Content-Type": "application/json"
@@ -17,10 +17,42 @@ const joinGameById = async (id: number, gameCode: string) => {
     body: JSON.stringify({ id: id, gameCode: gameCode })
   });
 };
+
+const deleteById = (id: number) => {
+  return fetch(process.env.NEXT_PUBLIC_API_URL + "/player/delete", {
+    method: "PUT",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ id: id })
+  });
+};
+
+const updateUsernameById = (id: number, username: string) => {
+  return fetch(process.env.NEXT_PUBLIC_API_URL + "/player/update", {
+    method: "PUT",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ id: id, username: username })
+  });
+};
+
+const getAllPlayersInGameByGameCode = (gameCode: string) => {
+  return fetch(process.env.NEXT_PUBLIC_API_URL + `/player/${gameCode}`, {
+    method: "GET",
+    headers: {
+        "Content-Type": "application/json"
+    }
+  });
+};
   
 const PlayerService = {
   createPlayer,
-  joinGameById
+  joinGameById,
+  deleteById,
+  updateUsernameById,
+  getAllPlayersInGameByGameCode
 };
   
 export default PlayerService;

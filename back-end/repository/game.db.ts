@@ -54,6 +54,17 @@ const updateGame = async (game: Game): Promise<Game | null> => {
     }
 };
 
+const deleteGameByGameCode = async (gameCode: string) => {
+    try {
+        await database.game.delete({
+            where: { gameCode: gameCode }
+        });
+    } catch (error) {
+        console.error(error);
+        throw new Error('Database error. See server log for details.');
+    }
+};
+
 const getGameByGameCode = async (gameCode: string): Promise<Game | null> => {
     try {
         const gamePrisma = await database.game.findUnique({
@@ -79,5 +90,6 @@ const getGameByGameCode = async (gameCode: string): Promise<Game | null> => {
 export default {
     createGame,
     updateGame,
+    deleteGameByGameCode,
     getGameByGameCode
 };
