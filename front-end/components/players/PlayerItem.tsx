@@ -12,7 +12,7 @@ const PlayerItem: React.FC<Props> = ({ player, isHost }: Props) => {
      return (
         <>
         <div
-            className={`${styles.playerItem}`}>
+            className={`${styles.item}`}>
             {isHost && <FontAwesomeIcon
             className={`${styles.icon}`}
                 icon={faCrown} />}

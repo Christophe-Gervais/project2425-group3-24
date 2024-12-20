@@ -1,5 +1,5 @@
 .main {
-  margin: 10px;
+  margin: 20px;
   padding-bottom: 10px;
   display: flex;
   flex-direction: row;
@@ -16,7 +16,7 @@
   min-width: 25rem;
 }
 
-.playerItem {
+.item {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -25,7 +25,7 @@
   box-shadow: 10px 10px #ccc;
 }
 
-.playerItem:not(:last-child) {
+.item:not(:last-child) {
   margin-bottom: 1rem;
 }
 
@@ -91,6 +91,26 @@
 }
 
 .blackButton:hover {
+  text-decoration: underline;
+  box-shadow: 10px 10px #ccc;
+}
+
+.pointsButton {
+  margin-top: 3rem;
+  padding: 0 2rem;
+  width: 100%;
+  height: 3.2rem;
+  color: black;
+  font-family: "Kanit", sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 3.2rem;
+  text-decoration: none;
+  border: solid 3px #111;
+  transition: box-shadow 0.2s ease;
+}
+
+.pointsButton:hover {
   text-decoration: underline;
   box-shadow: 10px 10px #ccc;
 }

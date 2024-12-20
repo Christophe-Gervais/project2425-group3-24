@@ -16,8 +16,8 @@ type PlayerInput = {
     rounds: PlayerInRoundInput[],
     cardCzarRoundIds: number[],
     winningRoundIds: number[],
-    username: string,
-    score: number
+    username?: string,
+    score?: number
 }
 
 type PlayerInRoundInput = {

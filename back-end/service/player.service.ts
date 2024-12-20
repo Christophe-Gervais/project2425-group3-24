@@ -3,6 +3,7 @@ import gameDb from "../repository/game.db";
 import playerDb from "../repository/player.db";
 import { PlayerInput } from "../types";
 import gameService from "./game.service";
+import socketService from "./socket.service";
 
 const createPlayer = async ({ username, gameCode }: PlayerInput): Promise<Player> => {
     if (gameCode) {
@@ -10,9 +11,10 @@ const createPlayer = async ({ username, gameCode }: PlayerInput): Promise<Player
         if (!existingGame) {
             throw new Error(`Game with gameCode ${gameCode} does not exist.`);
         }
+        await socketService.sendUpdateSignalToSockets(gameCode);
     }
 
-    const player = new Player({ username: username, gameCode: gameCode, score: 0 });
+    const player = new Player({ username: username!, gameCode: gameCode, score: 0 });
 
     return await playerDb.createPlayer(player);
 };
@@ -29,10 +31,11 @@ const joinGameById = async ({ id, gameCode }: PlayerInput): Promise<Player | nul
     return await playerDb.updatePlayerById(player!);
 };
 
-const updatePlayerById = async ({ id, username }: PlayerInput): Promise<Player | null> => {
+const updatePlayerById = async ({ id, username, score }: PlayerInput): Promise<Player | null> => {
     const player = await playerDb.getPlayerById({ id: id! });
-    player!.setUsername(username);
-
+    player!.setUsername(username!);
+    player!.addScore(score?score:0);
+    await socketService.sendUpdateSignalToSockets(player?.getGameCode()!);
     return await playerDb.updatePlayerById(player!);
 };
 
@@ -48,8 +51,9 @@ const deletePlayerById = async ({ id }: PlayerInput) => {
         } else {
             game?.setHostPlayerId(game.getPlayerIds().find(playerId => playerId !== id)!);
             await gameDb.updateGame(game!);
+            await socketService.sendUpdateSignalToSockets(game?.getGameCode()!);
         }
-    }
+    } else await socketService.sendUpdateSignalToSockets(game?.getGameCode()!);
 
     await playerDb.deletePlayerById({ id: id! });
 
@@ -61,7 +65,7 @@ const getAllPlayersInGameByGameCode = async (gameCode: string): Promise<Array<Pl
     if (!existingGame) {
         throw new Error(`Game with gameCode ${gameCode} does not exist.`);
     }
-    console.log(gameCode);
+
     const players = await playerDb.getAllPlayersInGameByGameCode({ gameCode: gameCode });
 
     return players;

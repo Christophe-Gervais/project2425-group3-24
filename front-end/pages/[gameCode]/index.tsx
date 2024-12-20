@@ -8,14 +8,15 @@ import useSWRImmutable from 'swr/immutable'
 import PlayerService from "@services/PlayerService";
 import PlayerItem from "@components/players/PlayerItem";
 import { Player } from "@types";
-import Overview from "@components/players/Overview";
+import RuleItem from "@components/games/RuleItem";
+import Overview from "@components/Overview";
 
 const ReadGameByGameCode = () => {
   const router = useRouter();
   const gameCode = router.query.gameCode?.toString();
   const [username, setUsername] = useState("");
   const [usernameError, setUsernameError] = useState("");
-  const { sendMessage, lastMessage } = useWebSocket(gameCode ? `ws://localhost:3000/api/socket/${gameCode}` : null, {
+  const { lastMessage } = useWebSocket(gameCode ? `ws://localhost:3000/api/socket/${gameCode}` : null, {
     shouldReconnect: () => true
   });
 
@@ -49,8 +50,6 @@ const ReadGameByGameCode = () => {
         players.sort(function(a, b){return a.id! - b.id!});
         return { players };
     }
-
-    UpdateClients();
   };
 
   const { data, isLoading, error, mutate } = useSWRImmutable(gameCode ? "players" : null, fetcher);
@@ -75,14 +74,16 @@ const ReadGameByGameCode = () => {
     const [updatedPlayer] = await Promise.all([
       updatedPlayerResponse.json()
     ]);
-
-    UpdateClients();
   }
 
-  const UpdateClients = () => {
-    sendMessage("updateSignal");
+  const freePoints = async () => {
+    const [updatedPlayerResponse] = await Promise.all([
+      PlayerService.addPointsById(Number(sessionStorage.getItem("playerID")), 100)
+    ]);
+    const [updatedPlayer] = await Promise.all([
+      updatedPlayerResponse.json()
+    ]);
   }
-
   return (
     <>
       <Head>
@@ -96,8 +97,7 @@ const ReadGameByGameCode = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header 
-        gameCode={gameCode!}
-        UpdateClients={UpdateClients} />
+        gameCode={gameCode!} />
       <main className={`${styles.main}`}>
         <div>
           {error && <p className="text-danger">Failed to load</p>}
@@ -130,10 +130,23 @@ const ReadGameByGameCode = () => {
               Change name
             </button>}
           </form>
+          <button 
+              className={`${styles.pointsButton}`}
+              onClick={freePoints}>
+              Free points
+            </button>
         </div>
         <div>
           <Overview title="Rules">
-            <p></p>
+            <RuleItem
+              name="Time limit"
+              value="60s" />
+            <RuleItem
+              name="Max players"
+              value="4" />
+            <RuleItem
+              name="Win condition"
+              value="3000 points" />
           </Overview>
         </div>
       </main>

@@ -7,10 +7,9 @@ import { useRouter } from "next/navigation";
 
 type Props = {
   gameCode: string;
-  UpdateClients: () => void;
 };
 
-const Header: React.FC<Props> = ({ gameCode, UpdateClients }: Props) => {
+const Header: React.FC<Props> = ({ gameCode }: Props) => {
   const router = useRouter();
   const [toastVisible, setToastVisible] = useState(false);
 
@@ -22,7 +21,6 @@ const Header: React.FC<Props> = ({ gameCode, UpdateClients }: Props) => {
       deletedPlayerResponse.json()
     ]);
 
-    UpdateClients();
     router.replace("/");
   }
   return (

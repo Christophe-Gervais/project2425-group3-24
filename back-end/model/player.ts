@@ -66,6 +66,10 @@ export class Player {
         return this.username;
     }
 
+    addScore(score: number) {
+        this.score += score;
+    }
+
     getScore(): number {
         return this.score;
     }
