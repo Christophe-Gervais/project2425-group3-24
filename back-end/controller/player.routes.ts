@@ -97,7 +97,7 @@ playerRouter.put('/update', async (req: Request, res: Response, next: NextFuncti
     }
 });
 
-playerRouter.put('/delete', async (req: Request, res: Response, next: NextFunction) => {
+playerRouter.delete('/delete', async (req: Request, res: Response, next: NextFunction) => {
     try {
         const playerInput = <PlayerInput>req.body;
         await playerService.deletePlayerById(playerInput);

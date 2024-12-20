@@ -20,7 +20,7 @@ const joinGameById = (id: number, gameCode: string) => {
 
 const deleteById = (id: number) => {
   return fetch(process.env.NEXT_PUBLIC_API_URL + "/player/delete", {
-    method: "PUT",
+    method: "DELETE",
     headers: {
         "Content-Type": "application/json"
     },
