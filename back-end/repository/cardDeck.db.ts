@@ -1,7 +1,7 @@
 import { CardDeck } from '../model/cardDeck';
 import database from './database';
 
-const createCardDeck = async (cardDeck: CardDeck): Promise<CardDeck> => {
+export const createCardDeck = async (cardDeck: CardDeck): Promise<CardDeck> => {
     try {
         const cardDeckPrisma = await database.cardDeck.create({
             data: {
@@ -20,7 +20,7 @@ const createCardDeck = async (cardDeck: CardDeck): Promise<CardDeck> => {
     }
 };
 
-const getCardDeckById = async (id: number): Promise<CardDeck | null> => {
+export const getCardDeckById = async (id: number): Promise<CardDeck | null> => {
     try {
         const cardDeckPrisma = await database.cardDeck.findUnique({
             where: { id },
@@ -38,7 +38,7 @@ const getCardDeckById = async (id: number): Promise<CardDeck | null> => {
     }
 };
 
-const getAllCardDecks = async (): Promise<CardDeck[]> => {
+export const getAllCardDecks = async (): Promise<CardDeck[]> => {
     try {
         const cardDeckPrisma = await database.cardDeck.findMany({
             include: {
